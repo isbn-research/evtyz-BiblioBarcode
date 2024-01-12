@@ -26,7 +26,7 @@ import java.util.*
 
 class BookActivity : AppCompatActivity() {
     //Initialize Volley Request Queue
-    private var requestQueue: RequestQueue? = null
+        private var requestQueue: RequestQueue? = null
     private var sharedPref: SharedPreferences? = null
 
     //Initialize book
@@ -60,8 +60,8 @@ class BookActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         title = "Edit Info:"
         setSupportActionBar(toolbar)
-        Objects.requireNonNull(supportActionBar).setDisplayShowHomeEnabled(true)
-        Objects.requireNonNull(supportActionBar).setDisplayHomeAsUpEnabled(true)
+        Objects.requireNonNull(supportActionBar)?.setDisplayShowHomeEnabled(true)
+        Objects.requireNonNull(supportActionBar)?.setDisplayHomeAsUpEnabled(true)
         viewGroup = findViewById(R.id.listFields)
         searchButton = findViewById(R.id.searchLocation)
         searchButton?.setVisibility(View.INVISIBLE)
@@ -87,7 +87,7 @@ class BookActivity : AppCompatActivity() {
                 processBook()
             } else {
                 // We entered it via editing an existing book
-                book = MainActivity.database.bookDao().loadBook(code)
+                book = MainActivity.database?.bookDao()?.loadBook(code)
                 isNew = false
                 saveButton?.setImageResource(R.drawable.content_save)
                 processAuthors()
@@ -133,8 +133,7 @@ class BookActivity : AppCompatActivity() {
     //Loads a book based on the code
     private fun loadBook(isbn: String) {
         //First API call
-        val url = "https://www.googleapis.com/books/v1/volumes?q=isbn:"
-        +isbn
+        val url = "https://www.googleapis.com/books/v1/volumes?q=isbn:"+isbn
         val request = JsonObjectRequest(Request.Method.GET, url, null, { response: JSONObject ->
             try {
                 //Gets the first item searched (book that corresponds to ISBN) and then gets the url of the selfLink
@@ -276,21 +275,21 @@ class BookActivity : AppCompatActivity() {
             firstName.setText(first)
             firstName.addTextChangedListener(object : AuthorTextWatcher(i) {
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    Objects.requireNonNull(authors!![id]).first = s.toString()
+                    //Objects.requireNonNull(authors!!.get(id))?.first ?: = s.toString()
                 }
             })
             val middleName = authorAdd.findViewById<EditText>(R.id.add_middle)
             middleName.setText(middle)
             middleName.addTextChangedListener(object : AuthorTextWatcher(i) {
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    Objects.requireNonNull(authors!![id]).middle = s.toString()
+                    //Objects.requireNonNull(authors!![id])?.middle ?: = s . toString ()
                 }
             })
             val lastName = authorAdd.findViewById<EditText>(R.id.add_last)
             lastName.setText(last)
             lastName.addTextChangedListener(object : AuthorTextWatcher(i) {
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    Objects.requireNonNull(authors!![id]).last = s.toString()
+                    //Objects.requireNonNull(authors!![id]).last = s.toString()
                 }
             })
             fieldAuthorEdit?.addView(
@@ -335,19 +334,19 @@ class BookActivity : AppCompatActivity() {
         val firstName = authorAdd.findViewById<EditText>(R.id.add_first)
         firstName.addTextChangedListener(object : AuthorTextWatcher(nextAuthorId) {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                Objects.requireNonNull(authors!![id]).first = s.toString()
+               Objects.requireNonNull(authors!![id])?.first  = s.toString()
             }
         })
         val middleName = authorAdd.findViewById<EditText>(R.id.add_middle)
         middleName.addTextChangedListener(object : AuthorTextWatcher(nextAuthorId) {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                Objects.requireNonNull(authors!![id]).middle = s.toString()
+                Objects.requireNonNull(authors!![id])?.middle = s.toString()
             }
         })
         val lastName = authorAdd.findViewById<EditText>(R.id.add_last)
         lastName.addTextChangedListener(object : AuthorTextWatcher(nextAuthorId) {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                Objects.requireNonNull(authors!![id]).last = s.toString()
+                Objects.requireNonNull(authors!![id])?.last = s.toString()
             }
         })
         fieldAuthorEdit!!.addView(
@@ -389,9 +388,9 @@ class BookActivity : AppCompatActivity() {
 
         //Inserts or updates a book
         if (isNew) {
-            MainActivity.database.bookDao().insertBook(book)
+            MainActivity.database?.bookDao()?.insertBook(book!!)
         } else {
-            MainActivity.database.bookDao().updateBook(book)
+            MainActivity.database?.bookDao()?.updateBook(book!!)
         }
 
         //Goes to next activity

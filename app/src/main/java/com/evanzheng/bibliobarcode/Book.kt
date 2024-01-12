@@ -19,44 +19,44 @@ class Book : Comparable<Book> {
     //Fields in SQL database
     @JvmField
     @ColumnInfo(name = "title")
-    var title: String? = null
+    var title: String = ""
 
     @JvmField
     @ColumnInfo(name = "authors")
-    var authors: MutableList<Author?>
+    var authors: MutableList<Author>
 
     @JvmField
     @ColumnInfo(name = "publisher")
-    var publisher: String? = null
+    var publisher: String = ""
 
     @JvmField
     @ColumnInfo(name = "year")
-    var year: String? = null
+    var year: String = ""
 
     @JvmField
     @ColumnInfo(name = "city")
-    var city: String?
+    var city: String
 
     @JvmField
     @ColumnInfo(name = "state")
-    var state: String?
+    var state: String
 
     //Citations (which we can build on the spot, for space efficiency)
     @Ignore
-    var citation: String? = null
+    var citation: String = ""
 
     @Ignore
-    var rawFormatCitation: String? = null
+    var rawFormatCitation: String = ""
 
     //When we call a book from the database, this is what is used to build it.
     constructor(
         isbn: String,
-        title: String?,
-        authors: MutableList<Author?>,
-        publisher: String?,
-        year: String?,
-        city: String?,
-        state: String?
+        title: String,
+        authors: MutableList<Author>,
+        publisher: String,
+        year: String,
+        city: String,
+        state: String
     ) {
         this.isbn = isbn
         this.title = title
@@ -76,7 +76,7 @@ class Book : Comparable<Book> {
         } catch (e: JSONException) {
             ""
         }
-        authors = ArrayList()
+        authors = ArrayList<Author>()
         try {
             val rawAuthors = info.getJSONArray("authors")
             val numAuthors = rawAuthors.length()
@@ -116,18 +116,18 @@ class Book : Comparable<Book> {
 
     //Conversion between hashmap and book
     fun infoMapToList(bookInfo: Map<String?, String?>) {
-        title = bookInfo["title"]
-        publisher = bookInfo["publisher"]
-        year = bookInfo["year"]
-        city = bookInfo["city"]
-        state = bookInfo["state"]
+        title = bookInfo["title"].toString()
+        publisher = bookInfo["publisher"].toString()
+        year = bookInfo["year"].toString()
+        city = bookInfo["city"].toString()
+        state = bookInfo["state"].toString()
     }
 
     //Converts hashmap to author list and string
-    fun authorMapToList(authorMap: Map<Int, Author?>) {
-        authors = ArrayList()
+    fun authorMapToList(authorMap: MutableMap<Int, Author?>) {
+        authors = ArrayList<Author>()
         for (i in authorMap.keys) {
-            authors.add(authorMap[i])
+            authors.add(authorMap[i]!!)
         }
         Collections.sort(authors)
     }
@@ -172,10 +172,8 @@ class Book : Comparable<Book> {
                 } else {
                     "$year."
                 }
-                citation = authorCite
-                +titleCite + publisherCite + yearCite
-                rawFormatCitation = authorCite
-                +"<i>" + titleCite + "</i>" + publisherCite + yearCite
+                citation = authorCite + titleCite + publisherCite + yearCite
+                rawFormatCitation = authorCite + "<i>" + titleCite + "</i>" + publisherCite + yearCite
             }
             "APA" -> {
                 authorCite = ""
@@ -210,10 +208,8 @@ class Book : Comparable<Book> {
                 } else {
                     "$publisher."
                 }
-                rawFormatCitation = authorCite
-                +yearCite + "<i>" + titleCite + "</i>" + cityCite + stateCite + publisherCite
-                citation = authorCite
-                +yearCite + titleCite + cityCite + stateCite + publisherCite
+                rawFormatCitation = authorCite + yearCite + "<i>" + titleCite + "</i>" + cityCite + stateCite + publisherCite
+                citation = authorCite + yearCite + titleCite + cityCite + stateCite + publisherCite
             }
             "Chicago" -> {
                 authorCite = ""
@@ -247,10 +243,8 @@ class Book : Comparable<Book> {
                 } else {
                     "$year."
                 }
-                rawFormatCitation = authorCite
-                +"<i>" + titleCite + "</i>" + cityCite + publisherCite + yearCite
-                citation = authorCite
-                +titleCite + cityCite + publisherCite + yearCite
+                rawFormatCitation = authorCite + "<i>" + titleCite + "</i>" + cityCite + publisherCite + yearCite
+                citation = authorCite + titleCite + cityCite + publisherCite + yearCite
             }
             "Harvard" -> {
                 authorCite = ""
@@ -280,10 +274,8 @@ class Book : Comparable<Book> {
                 } else {
                     "$publisher."
                 }
-                rawFormatCitation = authorCite
-                +yearCite + "<i>" + titleCite + "</i>" + cityCite + publisherCite
-                citation = authorCite
-                +yearCite + titleCite + cityCite + publisherCite
+                rawFormatCitation = authorCite + yearCite + "<i>" + titleCite + "</i>" + cityCite + publisherCite
+                citation = authorCite + yearCite + titleCite + cityCite + publisherCite
             }
             else -> rawFormatCitation = "$title Citation error"
         }

@@ -57,7 +57,8 @@ internal constructor(// Style of citation
                 book.cite(style)
             }
         }
-        Collections.sort(books)
+
+        //Collections.sort(books)
         notifyDataSetChanged()
     }
 

@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity(), CameraXConfig.Provider {
 
         // Set up click listener
         takePhoto?.setOnClickListener(View.OnClickListener { v: View? -> Take() })
-        viewfinder?.setOnTouchListener(object : OnSwipeTouchListener(this) {
+        viewfinder?.setOnTouchListener(object : OnSwipeTouchListener(this@MainActivity) {
             public override fun onSwipeTop() {
                 goToBibliography()
             }
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity(), CameraXConfig.Provider {
         //Check if a tutorial needs to be run
         sharedPref = getPreferences(MODE_PRIVATE)
         val ranBefore = sharedPref?.getBoolean("camera", false)
-        if (!ranBefore) {
+        if (!ranBefore!!) {
             runTutorial()
         }
     }
